@@ -1,0 +1,302 @@
+.signlang_detection-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: var(--font-family);
+  position: relative;
+}
+
+.signlang_language-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.signlang_language-dropdown-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 20px;
+  height: 30px;
+  background-color: var(--color-subtext);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.signlang_language-dropdown-button:hover {
+  background-color: #d85a3f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.signlang_dropdown-icon {
+  transition: transform 0.3s ease;
+  font-size: 12px;
+}
+
+.signlang_dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.signlang_language-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 250px;
+  overflow: hidden;
+  z-index: 1001;
+}
+
+.signlang_language-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.signlang_language-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.signlang_language-dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.signlang_language-dropdown-item.active {
+  background-color: var(--color-subtext);
+  color: #fff;
+}
+
+.signlang_language-dropdown-item.active:hover {
+  background-color: #d85a3f;
+}
+
+.signlang_language-code {
+  font-weight: 700;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.signlang_language-name {
+  font-size: 14px;
+  color: #666;
+  flex: 1;
+  text-align: right;
+}
+
+.signlang_language-dropdown-item.active .signlang_language-name {
+  color: #fff;
+}
+
+.signlang_webcam {
+  width: 600px;
+  height: 500px;
+  z-index: 999;
+}
+
+.signlang_canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 600px;
+  height: 500px;
+  z-index: 999;
+}
+
+.signlang_data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.signlang_controls-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 1rem;
+}
+
+.signlang_data-container .signlang_data {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.signlang_data-container button {
+  width: 100px;
+  height: 30px;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  background-color: var(--color-subtext);
+  color: #fff;
+  font-family: var(--font-family);
+  border-radius: 8px;
+}
+
+.signlang_data-container p {
+  font-size: 20px;
+  margin: 1rem;
+  width: 20%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.gesture_output {
+  color: var(--color-subtext);
+  width: 100%;
+}
+
+.gesture_translation {
+  color: #ffffff;
+  width: 100%;
+  font-size: 18px;
+}
+
+.signlang_detection_notLoggedIn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 2rem;
+}
+
+.signlang_detection_notLoggedIn h1{
+  letter-spacing: 5px;
+  font-weight: 800;
+}
+
+.signlang_detection_notLoggedIn p{
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  width: 60%;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.signlang_detection_notLoggedIn img{
+  width: 600px;
+  height: 400px;
+  object-fit: contain;
+  margin: 1rem 0;
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 1080px) {
+  .signlang_webcam {
+    width: 550px;
+    height: 500px;
+  }
+
+  .signlang_canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 550px;
+    height: 500px;
+  }
+
+}
+
+@media screen and (max-width: 990px) {
+  .signlang_detection-container {
+    flex-direction: column;
+  }
+
+  .signlang_controls-wrapper {
+    gap: 10px;
+  }
+
+  .signlang_detection_notLoggedIn img{
+    width: 500px;
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+    .signlang_controls-wrapper {
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .signlang_data-container button {
+      width: 100%;
+    }
+
+    .signlang_language-dropdown {
+      width: 100%;
+    }
+
+    .signlang_language-dropdown-button {
+      padding: 8px 15px;
+      font-size: 14px;
+      width: 100%;
+      min-width: auto;
+    }
+
+    .signlang_language-dropdown-menu {
+      min-width: 200px;
+      width: 100%;
+    }
+
+    .signlang_language-code {
+      font-size: 14px;
+    }
+
+    .signlang_language-name {
+      font-size: 12px;
+    }
+
+    .signlang_webcam {
+        width: 100%;
+        height: fit-content;
+    }
+      
+    .signlang_canvas {
+        width: 100%;
+        height: fit-content;
+    }
+
+    .signlang_data-container .signlang_data {
+      padding: 0 0.5rem;
+    }
+
+    .signlang_data-container p {
+      font-size: 18px;
+      width: 30%;
+    }
+
+    .signlang_detection_notLoggedIn img{
+      width: 300px;
+      height: 300px;
+      margin: 0;
+    }
+
+    .signlang_detection_notLoggedIn p{
+      font-size: 0.8rem;
+      width: 100%;
+    }
+    
+
+  }
+  
