@@ -2,20 +2,6 @@
 
 A real-time sign language detection and translation web application that uses machine learning to recognize hand gestures and translate them into text. This project combines computer vision, AI, and web technologies to make sign language communication more accessible.
 
-## 📋 Table of Contents
-
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Technologies Used](#technologies-used)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Project](#running-the-project)
-- [How It Works](#how-it-works)
-- [Project Components](#project-components)
-- [API Integration](#api-integration)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## ✨ Features
 
@@ -70,7 +56,6 @@ sign-language-recognition/
 - **Redux**: State management
 - **React Router**: Client-side routing
 - **React Webcam**: Webcam integration
-- **Chart.js & react-chartjs-2**: Data visualization for analytics
 
 ### Machine Learning & Computer Vision
 - **MediaPipe**: Pre-trained gesture recognition models
@@ -333,6 +318,3 @@ For support, questions, or suggestions, please open an issue on the GitHub repos
 - **DeepL** for translation services
 - All contributors who have helped improve this project
 
----
-
-**Happy signing! 🤟**
