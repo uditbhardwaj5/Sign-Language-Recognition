@@ -16,7 +16,6 @@ import { addSignData } from "../../redux/actions/signdataaction";
 import ProgressBar from "./ProgressBar/ProgressBar";
 
 import DisplayImg from "../../assests/displayGif.gif";
-import { FaChevronDown } from "react-icons/fa";
 
 let startTime = "";
 
@@ -30,13 +29,15 @@ const Detect = () => {
   const [modelError, setModelError] = useState(null);
   const [runningMode, setRunningMode] = useState("IMAGE");
   const [progress, setProgress] = useState(0);
-  const [selectedLanguage, setSelectedLanguage] = useState("ASL");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState("EN");
   const [translatedText, setTranslatedText] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
-  const [translationError, setTranslationError] = useState(null);
+  const [translateError, setTranslateError] = useState(null);
 
   const requestRef = useRef();
+  const translateAbortRef = useRef(null);
+  const translateTimeoutRef = useRef(null);
+  const lastTranslationRef = useRef({ text: "", lang: "" });
 
   const [detectedData, setDetectedData] = useState([]);
 
@@ -46,40 +47,35 @@ const Detect = () => {
 
   const dispatch = useDispatch();
 
-  const languages = [
-    { code: "ASL", name: "American Sign Language", targetLang: "en" },
-    { code: "HSL", name: "Hindi Sign Language", targetLang: "hi" },
-    { code: "BSF", name: "Bengali Sign Language", targetLang: "bn" },
-    { code: "MGS", name: "Marathi Sign Language", targetLang: "mr" },
-    { code: "TSL", name: "Tamil Sign Language", targetLang: "ta" },
-  ];
-
-  const getTargetLanguage = () => {
-    const selected = languages.find((lang) => lang.code === selectedLanguage);
-    return selected?.targetLang || "en";
-  };
-
-  const dropdownRef = useRef(null);
-
+  // Cleanup animation frame on unmount
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+      if (translateTimeoutRef.current) {
+        clearTimeout(translateTimeoutRef.current);
+      }
+      if (translateAbortRef.current) {
+        translateAbortRef.current.abort();
+      }
     };
   }, []);
 
-  if (
-    process.env.NODE_ENV === "development" ||
-    process.env.NODE_ENV === "production"
-  ) {
-    console.log = function () {};
-  }
+  const translateProxyUrl =
+    process.env.REACT_APP_TRANSLATE_PROXY_URL || "/api/translate";
+
+  const languageOptions = [
+    { code: "EN", label: "English", supported: true },
+    { code: "HI", label: "Hindi", supported: true },
+    { code: "BN", label: "Bengali", supported: true },
+    { code: "MR", label: "Marathi", supported: true },
+    { code: "TA", label: "Tamil", supported: true },
+    { code: "GU", label: "Gujarati", supported: true },
+    { code: "TE", label: "Telugu", supported: true },
+    { code: "UR", label: "Urdu", supported: true },
+    { code: "SA", label: "Sanskrit", supported: true },
+  ];
 
   const predictWebcam = useCallback(() => {
     if (runningMode === "IMAGE") {
@@ -233,13 +229,19 @@ const Detect = () => {
         setIsModelLoading(true);
         setModelError(null);
 
+        const rawModelUrl =
+          process.env.REACT_APP_MODEL_URL ||
+          "/models/sign_language_recognizer.task";
+        const modelAssetPath = new URL(rawModelUrl, window.location.origin)
+          .toString();
+
         const vision = await FilesetResolver.forVisionTasks(
           "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
         );
 
         const recognizer = await GestureRecognizer.createFromOptions(vision, {
           baseOptions: {
-            modelAssetPath: process.env.REACT_APP_MODEL_URL,
+            modelAssetPath,
           },
           numHands: 2,
           runningMode: runningMode,
@@ -247,8 +249,10 @@ const Detect = () => {
 
         setGestureRecognizer(recognizer);
       } catch (error) {
-        console.error("Failed to load gesture recognizer:", error);
         setModelError("Failed to load gesture recognizer. Check model path.");
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to load gesture recognizer:", error);
+        }
       } finally {
         setIsModelLoading(false);
       }
@@ -259,65 +263,81 @@ const Detect = () => {
   useEffect(() => {
     if (!gestureOutput) {
       setTranslatedText("");
+      setTranslateError(null);
       return;
     }
 
-    const controller = new AbortController();
+    if (targetLanguage === "EN") {
+      setTranslatedText(gestureOutput);
+      setTranslateError(null);
+      return;
+    }
 
-    const translateText = async () => {
+    const lastTranslation = lastTranslationRef.current;
+    if (
+      lastTranslation.text === gestureOutput &&
+      lastTranslation.lang === targetLanguage
+    ) {
+      return;
+    }
+
+    if (translateTimeoutRef.current) {
+      clearTimeout(translateTimeoutRef.current);
+    }
+
+    translateTimeoutRef.current = setTimeout(async () => {
+      if (translateAbortRef.current) {
+        translateAbortRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      translateAbortRef.current = controller;
+
       try {
         setIsTranslating(true);
-        setTranslationError(null);
+        setTranslateError(null);
 
-        const target = getTargetLanguage();
-
-        const apiUrl =
-          process.env.REACT_APP_TRANSLATE_API_URL ||
-          "https://libretranslate.com/translate";
-        const apiKey = process.env.REACT_APP_TRANSLATE_API_KEY;
-
-        const payload = {
-          q: gestureOutput,
-          source: "auto",
-          target,
-          format: "text",
-        };
-
-        if (apiKey) {
-          payload.api_key = apiKey;
-        }
-
-        const response = await fetch(
-          apiUrl,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-            signal: controller.signal,
-          });
+        const response = await fetch(translateProxyUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: gestureOutput,
+            targetLang: targetLanguage,
+          }),
+          signal: controller.signal,
+        });
 
         if (!response.ok) {
-          throw new Error("Translation request failed");
+          const errorPayload = await response.json().catch(() => null);
+          const message = errorPayload?.error || "Translation unavailable.";
+          throw new Error(message);
         }
 
-        const data = await response.json();
-        setTranslatedText(data.translatedText || data.translation || "");
+        const payload = await response.json();
+        const translated = payload?.translation || "";
+
+        setTranslatedText(translated);
+        lastTranslationRef.current = {
+          text: gestureOutput,
+          lang: targetLanguage,
+        };
       } catch (error) {
-        if (error.name === "AbortError") return;
-        console.error("Translation error:", error);
-        setTranslationError("Failed to translate text.");
-        setTranslatedText("");
+        if (error.name !== "AbortError") {
+          setTranslateError(error.message || "Translation unavailable.");
+        }
       } finally {
         setIsTranslating(false);
       }
+    }, 400);
+
+    return () => {
+      if (translateTimeoutRef.current) {
+        clearTimeout(translateTimeoutRef.current);
+      }
     };
-
-    translateText();
-
-    return () => controller.abort();
-  }, [gestureOutput, selectedLanguage]);
+  }, [gestureOutput, targetLanguage, translateProxyUrl]);
 
   return (
     <>
@@ -339,71 +359,57 @@ const Detect = () => {
                   <button
                     onClick={enableCam}
                     disabled={isModelLoading || !!modelError}
+                    aria-label={webcamRunning ? "Stop webcam" : "Start webcam"}
                   >
                     {webcamRunning ? "Stop" : "Start"}
                   </button>
-                  
-                  <div className="signlang_language-dropdown" ref={dropdownRef}>
-                    <button
-                      className="signlang_language-dropdown-button"
-                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    >
-                      <span>{selectedLanguage}</span>
-                      <FaChevronDown
-                        className={`signlang_dropdown-icon ${
-                          isDropdownOpen ? "open" : ""
-                        }`}
-                      />
-                    </button>
-                    {isDropdownOpen && (
-                      <div className="signlang_language-dropdown-menu">
-                        {languages.map((lang) => (
-                          <div
-                            key={lang.code}
-                            className={`signlang_language-dropdown-item ${
-                              selectedLanguage === lang.code ? "active" : ""
-                            }`}
-                            onClick={() => {
-                              setSelectedLanguage(lang.code);
-                              setIsDropdownOpen(false);
-                            }}
-                          >
-                            <span className="signlang_language-code">
-                              {lang.code}
-                            </span>
-                            <span className="signlang_language-name">
-                              {lang.name}
-                            </span>
-                          </div>
+                  <div className="signlang_language-selector">
+                    <label htmlFor="translate-language">Translate to:</label>
+                    <div className="signlang_select-wrapper">
+                      <select
+                        id="translate-language"
+                        value={targetLanguage}
+                        onChange={(event) => setTargetLanguage(event.target.value)}
+                        className="signlang_select"
+                      >
+                        {languageOptions.map((option) => (
+                          <option key={option.code} value={option.code}>
+                            {option.label}
+                            {option.supported ? "" : " (unsupported)"}
+                          </option>
                         ))}
-                      </div>
-                    )}
+                      </select>
+                      <span className="signlang_select-arrow">▼</span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="signlang_data">
                   {isModelLoading && (
-                    <p className="gesture_status-text">
+                    <p className="gesture_output">
                       Loading model, please wait...
                     </p>
                   )}
                   {modelError && (
-                    <p className="gesture_status-text error">{modelError}</p>
+                    <p className="gesture_output" style={{ color: '#ff6b6b' }}>{modelError}</p>
                   )}
                   <p className="gesture_output">{gestureOutput}</p>
 
+                  <div className="signlang_translation">
+                    {translateError ? (
+                      <p className="gesture_output signlang_translation-error">
+                        {translateError}
+                      </p>
+                    ) : (
+                      <p className="gesture_output">
+                        {isTranslating
+                          ? "Translating..."
+                          : translatedText || "Translation will appear here"}
+                      </p>
+                    )}
+                  </div>
+
                   {progress ? <ProgressBar progress={progress} /> : null}
-                  {isTranslating && !translationError && (
-                    <p className="gesture_status-text">Translating...</p>
-                  )}
-                  {translationError && (
-                    <p className="gesture_status-text error">
-                      {translationError}
-                    </p>
-                  )}
-                  {translatedText && (
-                    <p className="gesture_translation">{translatedText}</p>
-                  )}
                 </div>
               </div>
             </div>

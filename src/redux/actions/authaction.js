@@ -23,9 +23,10 @@ export const login = () => async (dispatch) => {
     const accessToken = res.credential.accessToken;
 
     const profile = {
-      name: res.additionalUserInfo.profile.name,
-      photoURL: res.additionalUserInfo.profile.picture,
-      userId: res.additionalUserInfo.profile.id,
+      name: res.user.displayName || res.additionalUserInfo.profile.name,
+      photoURL: res.user.photoURL,
+      userId: res.user.uid,
+      email: res.user.email,
     };
     
 

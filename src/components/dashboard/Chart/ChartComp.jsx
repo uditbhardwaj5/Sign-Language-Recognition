@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import "./Chart.css";
 import Chart from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
@@ -37,9 +37,6 @@ const ChartComp = ({ signDataList }) => {
   // Separate dates and secondsSpent into separate arrays
   const dates = reducedData.map((item) => item.date).reverse();
   const secondsSpent = reducedData.map((item) => item.secondsSpent).reverse();
-
-  console.log(dates);
-  console.log(secondsSpent);
 
   const data = {
     labels: dates.slice(0, 7),

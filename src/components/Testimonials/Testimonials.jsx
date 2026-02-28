@@ -13,7 +13,7 @@ const Testimonials = () => {
 
             <div className="signlang_card-container">
                {userFeedback.map((data,i)=>(
-                  <Card title={data.title} text={data.text} tag={data.tag} key={i*991}/>
+                  <Card title={data.title} text={data.text} tag={data.tag} key={`feedback-${i}`}/>
                ))}
             </div>
         </div>

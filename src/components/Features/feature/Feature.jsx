@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./Feature.css";
 
 const Feature = ({ title, text }) => {
@@ -13,6 +14,11 @@ const Feature = ({ title, text }) => {
       </div>
     </div>
   );
+};
+
+Feature.propTypes = {
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default Feature;

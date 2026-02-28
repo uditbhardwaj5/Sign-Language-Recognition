@@ -6,102 +6,6 @@
   position: relative;
 }
 
-.signlang_language-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.signlang_language-dropdown-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 0 20px;
-  height: 30px;
-  background-color: var(--color-subtext);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-family: var(--font-family);
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-
-.signlang_language-dropdown-button:hover {
-  background-color: #d85a3f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.signlang_dropdown-icon {
-  transition: transform 0.3s ease;
-  font-size: 12px;
-}
-
-.signlang_dropdown-icon.open {
-  transform: rotate(180deg);
-}
-
-.signlang_language-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 250px;
-  overflow: hidden;
-  z-index: 1001;
-}
-
-.signlang_language-dropdown-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.signlang_language-dropdown-item:last-child {
-  border-bottom: none;
-}
-
-.signlang_language-dropdown-item:hover {
-  background-color: #f5f5f5;
-}
-
-.signlang_language-dropdown-item.active {
-  background-color: var(--color-subtext);
-  color: #fff;
-}
-
-.signlang_language-dropdown-item.active:hover {
-  background-color: #d85a3f;
-}
-
-.signlang_language-code {
-  font-weight: 700;
-  font-size: 16px;
-  margin-right: 10px;
-}
-
-.signlang_language-name {
-  font-size: 14px;
-  color: #666;
-  flex: 1;
-  text-align: right;
-}
-
-.signlang_language-dropdown-item.active .signlang_language-name {
-  color: #fff;
-}
-
 .signlang_webcam {
   width: 600px;
   height: 500px;
@@ -127,48 +31,143 @@
 
 .signlang_controls-wrapper {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 1rem;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 1.5rem;
+}
+
+.signlang_language-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.signlang_language-selector label {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  letter-spacing: 1px;
+}
+
+.signlang_select-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 160px;
+}
+
+.signlang_select {
+  width: 100%;
+  height: 38px;
+  padding: 0 2rem 0 0.75rem;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 5px;
+  border: 1px solid var(--color-text);
+  background: var(--color-blog);
+  color: #fff;
+  font-family: var(--font-family);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: all 0.3s ease;
+}
+
+.signlang_select:hover {
+  border-color: var(--color-subtext);
+  box-shadow: 0 2px 6px rgba(240, 116, 88, 0.2);
+}
+
+.signlang_select:focus {
+  outline: none;
+  border-color: var(--color-subtext);
+  box-shadow: 0 0 0 2px rgba(240, 116, 88, 0.3);
+}
+
+.signlang_select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signlang_select option {
+  background: var(--color-blog);
+  color: #fff;
+  padding: 0.5rem;
+  font-weight: 500;
+}
+
+.signlang_select-arrow {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text);
+  font-size: 10px;
+  transition: color 0.3s ease;
+}
+
+.signlang_select:hover + .signlang_select-arrow,
+.signlang_select:focus + .signlang_select-arrow {
+  color: var(--color-subtext);
 }
 
 .signlang_data-container .signlang_data {
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 0 1rem;
+  padding: 1rem;
+  gap: 0.5rem;
 }
 
 .signlang_data-container button {
   width: 100px;
-  height: 30px;
-  font-size: 20px;
+  height: 38px;
+  font-size: 18px;
   font-weight: 500;
   border: none;
   outline: none;
   background-color: var(--color-subtext);
   color: #fff;
   font-family: var(--font-family);
-  border-radius: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signlang_data-container button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(240, 116, 88, 0.4);
+}
+
+.signlang_data-container button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .signlang_data-container p {
   font-size: 20px;
-  margin: 1rem;
-  width: 20%;
-  display: flex;
-  justify-content: flex-start;
+  margin: 0.5rem 0;
+  width: 100%;
+  text-align: center;
 }
 
 .gesture_output {
   color: var(--color-subtext);
   width: 100%;
+  font-weight: 600;
+  font-size: 20px;
 }
 
-.gesture_translation {
-  color: #ffffff;
+.signlang_translation {
   width: 100%;
-  font-size: 18px;
+}
+
+.signlang_translation-error {
+  color: #ff6b6b;
 }
 
 .signlang_detection_notLoggedIn{
@@ -235,36 +234,27 @@
 @media screen and (max-width: 550px) {
     .signlang_controls-wrapper {
       flex-direction: column;
-      gap: 10px;
+      gap: 15px;
       width: 100%;
+    }
+
+    .signlang_language-selector {
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .signlang_select-wrapper {
+      width: 100%;
+    }
+
+    .signlang_select {
+      width: 100%;
+      height: 42px;
+      font-size: 16px;
     }
 
     .signlang_data-container button {
       width: 100%;
-    }
-
-    .signlang_language-dropdown {
-      width: 100%;
-    }
-
-    .signlang_language-dropdown-button {
-      padding: 8px 15px;
-      font-size: 14px;
-      width: 100%;
-      min-width: auto;
-    }
-
-    .signlang_language-dropdown-menu {
-      min-width: 200px;
-      width: 100%;
-    }
-
-    .signlang_language-code {
-      font-size: 14px;
-    }
-
-    .signlang_language-name {
-      font-size: 12px;
     }
 
     .signlang_webcam {
@@ -282,8 +272,7 @@
     }
 
     .signlang_data-container p {
-      font-size: 18px;
-      width: 30%;
+      font-size: 16px;
     }
 
     .signlang_detection_notLoggedIn img{

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import logo from "../../assests/logo2.png";
@@ -40,9 +41,9 @@ const Navbar = ({ notifyMsg }) => {
     <div className="signlang_navbar  gradient__bg">
       <div className="singlang_navlinks">
         <div className="signlang_navlinks_logo">
-          <a href="/">
+          <Link to="/">
             <img className="logo" src={logo} alt="logo" />
-          </a>
+          </Link>
         </div>
 
         <div className="signlang_navlinks_container">
@@ -68,7 +69,13 @@ const Navbar = ({ notifyMsg }) => {
         <div className="signlang_auth-data">
           {accessToken ? (
             <>
-              <img src={user?.photoURL} alt="user-icon" />
+              {user?.photoURL && (
+                <img 
+                  src={user.photoURL} 
+                  alt={user?.name || "User"}
+                  referrerPolicy="no-referrer"
+                />
+              )}
               <button type="button" onClick={handleLogout}>
                 Logout
               </button>
@@ -112,7 +119,13 @@ const Navbar = ({ notifyMsg }) => {
             <div className="signlang__navbar-menu_container-links-authdata">
               {accessToken ? (
                 <>
-                  <img src={user?.photoURL} alt="user-icon" />
+                  {user?.photoURL && (
+                    <img 
+                      src={user.photoURL} 
+                      alt={user?.name || "User"}
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
                   <button type="button" onClick={handleLogout}>
                     Logout
                   </button>
@@ -128,6 +141,10 @@ const Navbar = ({ notifyMsg }) => {
       </div>
     </div>
   );
+};
+
+Navbar.propTypes = {
+  notifyMsg: PropTypes.func,
 };
 
 export default Navbar;

@@ -1,6 +1,7 @@
 import React from 'react'
 import "./NotFound.css"
 import NotFoundImg from "../../assests/404.svg"
+import { Link } from 'react-router-dom'
 
 const NotFound = () => {
   return (
@@ -10,13 +11,13 @@ const NotFound = () => {
         </div>
 
         <div className="signlang_notfound-data">
-            <p className='gradient__text'>This Page Doesn't exists. Please Click on below button to go back to SLR</p>
+            <p className='gradient__text'>This Page Doesn't exist. Please Click on below button to go back to SLR</p>
             
-            <button>
-                <a href="/">
+            <Link to="/">
+                <button type="button">
                     Go Back
-                </a>
-            </button>
+                </button>
+            </Link>
         </div>
     </div>
   )

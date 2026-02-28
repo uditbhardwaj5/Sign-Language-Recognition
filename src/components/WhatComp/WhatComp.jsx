@@ -16,7 +16,7 @@ const WhatComp = () => {
       <div className="signlang__whatsignlang-container">
         {
           WhatfeatureData.map((data,i)=>(
-            <Feature title={data.title} text={data.text} key={i*201}/>
+            <Feature title={data.title} text={data.text} key={`feature-${i}`}/>
           ))
         }
         

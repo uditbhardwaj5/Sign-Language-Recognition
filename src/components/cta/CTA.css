@@ -24,11 +24,16 @@
     line-height: 30px;
     padding: 0.5rem 1rem;
     border-radius: 2rem;
-
     border: none;
     outline: none;
     cursor: pointer;
     min-width: 150px;
+    transition: all 0.3s ease;
+}
+
+.signlang_cta-button button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 
