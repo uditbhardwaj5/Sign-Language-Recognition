@@ -14,41 +14,6 @@ A real-time sign language detection and translation web application that uses ma
 - **Responsive Design**: Works seamlessly on desktop and mobile browsers
 - **Offline Support**: Progressive Web App capabilities with offline functionality
 
-## 🏗️ Project Structure
-
-```
-sign-language-recognition/
-├── public/                          # Static files and model assets
-│   ├── models/
-│   │   └── sign_language_recognizer.task    # MediaPipe gesture recognizer model
-│   ├── index.html
-│   ├── serviceWorker.js             # Service worker for offline support
-│   └── offline.html
-├── src/                             # React application source code
-│   ├── components/                  # Reusable React components
-│   │   ├── Detect/                  # Main sign detection component
-│   │   ├── Dashboard/               # Analytics dashboard
-│   │   ├── navbar/                  # Navigation bar
-│   │   ├── footer/                  # Footer component
-│   │   ├── Features/                # Features showcase
-│   │   └── ...other components
-│   ├── redux/                       # Redux state management
-│   │   ├── actions/                 # Redux action creators
-│   │   ├── reducer/                 # Redux reducers
-│   │   └── store.js                 # Redux store configuration
-│   ├── data/                        # Static data and constants
-│   ├── firebase.js                  # Firebase configuration
-│   ├── App.js                       # Main App component
-│   └── index.js                     # React entry point
-├── server/                          # Node.js/Express backend
-│   └── index.js                     # Backend API server
-├── Code For Training the Model/
-│   └── SLR_MODEL_TRAINING.ipynb     # Jupyter notebook for model training
-├── package.json                     # Project dependencies
-├── firebase.json                    # Firebase hosting configuration
-└── storage.rules                    # Firebase storage rules
-```
-
 ## 🛠️ Technologies Used
 
 ### Frontend
